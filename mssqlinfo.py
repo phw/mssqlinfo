@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""mssqlinfo: (c) 2006 Philipp Wolfer
+"""mssqlinfo: (c) 2006-2009 Philipp Wolfer
 
 About:
 This module enables access to a SQL server browser
@@ -41,11 +41,12 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 import socket
 import sys
 
+DEFAULT_INSTANCE_NAME = 'MSSQLSERVER'
 DEFAULT_SERVER_BROWSER_PORT = 1434
 DEFAULT_SERVER_BROWSER_HOST = 'localhost'
 
@@ -84,6 +85,7 @@ that the SQL Server Browser is running on the server.
   -h --host        Hostname
                    Defaults to \"localhost\"
   -i --instance    Instance name
+                   Defaults to MSSQLSERVER.
   -p --port        Port of the SQL server browser.
                    Defaults to 1434.
      --value=VALUE If set only the specified value will be
@@ -105,9 +107,9 @@ Example: mssqlinfo -hlocalhost -iSQLEXPRESS"""
         usage()
         sys.exit(2)
 
+    instance = DEFAULT_INSTANCE_NAME
     port = DEFAULT_SERVER_BROWSER_PORT;
     hostname = DEFAULT_SERVER_BROWSER_HOST;
-    instance = None
     value = None
     
     for opt, arg in opts:
@@ -125,10 +127,6 @@ Example: mssqlinfo -hlocalhost -iSQLEXPRESS"""
             port = int(arg);
         elif opt == "--value":
             value = arg;
-
-    if instance is None:
-        usage()
-        sys.exit(2)
 
     try:
         info = getInstanceInfo(hostname, instance, port)
